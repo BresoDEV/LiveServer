@@ -1,0 +1,10 @@
+.tela{
+    /*'tela' é referente a tag '<html>>'*/
+    background-color:green;
+}
+
+.topo{
+    background-color:red;
+    width:100%;
+    height:20px;
+}
