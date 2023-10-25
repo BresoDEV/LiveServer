@@ -1,8 +1,13 @@
-.tela{
-    /*'tela' é referente a tag '<html>>'*/
+html{
     background-color:green;
 }
+*{
+    margin:0;
+}
 
+p{
+    color:white;
+}
 .topo{
     background-color:red;
     width:100%;
