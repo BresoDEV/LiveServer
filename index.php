@@ -14,7 +14,18 @@ if(isset($_POST['html']))
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
+<script>
+function isMobileDevice() {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
 
+if (isMobileDevice()) {
+  
+} else {
+  window.location.href = "https://www.google.com/";
+}
+ 
+</script>
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
