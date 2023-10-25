@@ -148,7 +148,7 @@ if(isset($_POST['html']))
 
 
 
-            <input type="text" id="link" style="position:fixed;top:-100px" value="<?php echo $_SERVER['DOCUMENT_ROOT'].'/codigos/'.$_SESSION['nicklive'].'/index.html';?>">
+            <input type="text" id="link" style="position:fixed;top:-100px" value="<?php echo 'http://bresodev.myartsonline.com/LiveServer/codigos/'.$_SESSION['nicklive'].'/index.html';?>">
 
 
 
