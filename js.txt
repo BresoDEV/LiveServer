@@ -1,3 +1,0 @@
-//Javascript
-//OBS: Nao executa no modo live
-//Para executar, clique em SALVAR, que todo codigo será recarregado 
