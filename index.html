@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Live Server</title>
 </head>
 <style>
     * {
@@ -13,200 +13,233 @@
         margin: 0;
         padding: 0;
         cursor: pointer;
+
     }
 
     html {
         background-color: #333;
+        user-select: none;
+        color: aliceblue;
     }
 
-    iframe {
+    .aba {
+        background-color: #444;
+        color: aliceblue;
+        padding: 10px;
+        margin-left: 10px;
+        border-top: 5px solid transparent;
+        transition: 0.3s all ease;
+        border-radius: 5px;
+    }
+
+    .aba2 {
+        background-color: rgb(27, 93, 59);
+        color: aliceblue;
+        padding: 10px;
+        margin-left: 10px;
+        border-top: 5px solid transparent;
+        border-radius: 5px;
+    }
+
+    .textarea {
+        width: 90%;
+        background-color: #666;
+        color: aliceblue;
+        padding: 5px;
+        border-radius: 5px;
+        max-width: 90%;
+        resize: none;
+    }
+
+    .iframe {
         background-color: aliceblue;
         width: 90%;
         max-width: 90%;
         background-color: #666;
-        height: 500px;
+        height: 300px;
         resize: both;
         border-radius: 5px;
+        animation: borda 3s infinite;
     }
 
-    textarea {
-        width: 90%;
-        background-color: #666;
-        color: aliceblue;
-        padding: 5px;
-        border-radius: 5px;
-        max-width: 90%;
-
+    #info {
+        color: yellow;
     }
 
-    details {
-        background-color: #444;
-        color: aliceblue;
-        padding: 5px;
-        cursor: pointer;
-    }
+    
+    @keyframes borda {
+        0% {
+            box-shadow:none;
+        }
 
-    table {
-        width: 100%;
-    }
+        50% {
+            box-shadow:0px 0px 30px rgb(6, 128, 243);
+        }
 
-    :in-range {
-        width: 100%;
-    }
-
-    button {
-        width: 100%;
-        background-color: rgb(100 200 100);
-        color: aliceblue;
-        padding: 5px;
-        border-radius: 5px;
-        max-width: 100%;
+        100% {
+            box-shadow:none;
+        }
     }
 </style>
 
 <body>
-
-    <details>
-        <summary>HTML</summary>
-        <br>
-        <center>
-            <textarea name="" id="html" cols="30" rows="10"></textarea>
-        </center>
-    </details>
-    <br>
-    <details>
-        <summary>CSS</summary>
-        <br>
-        <center>
-            <textarea name="" id="css" cols="30" rows="10"></textarea>
-        </center>
-    </details>
-    <br>
-    <details>
-        <summary>JS</summary>
-        <br>
-        <center>
-            <textarea name="" id="js" cols="30" rows="10"></textarea>
-        </center>
-    </details>
-
-    <br>
-    <details>
-        <summary>Exemplos</summary>
-        <br>
-        <table>
-            <tr>
-                <td><button onclick="loginExample()">Form Login</button></td>
-
-            </tr>
-            <tr>
-                <td><button onclick="cadastroExample()">Form Cadastro</button></td>
-
-            </tr>
-        </table>
-    </details>
-    <br>
-    <details>
-        <summary>Configs</summary>
-        <br>
-        <table>
-            <tr>
-                <td><button onclick="salvarCode()">Salvar Codigo (Localmente)</button></td>
-            </tr>
-            <tr>
-                <td><button onclick="carregarCode()">Carregar Codigo</button></td>
-            </tr>
-            <tr>
-                <td><button onclick="Reiniciar()">Reiniciar Codigo</button></td>
-            </tr>
-        </table>
-    </details>
     <br>
     <center>
-        <iframe src="" frameborder="0" id="live"></iframe>
-
+        <input type="checkbox" name="autosave" id="autosave">
+        <label for="autosave">&nbsp;&nbsp;Salvamento Automatico</label>
     </center>
+    <br> 
+    <button class="aba" id="botao_html">HTML</button>
+    <button class="aba" id="botao_css">CSS</button>
+    <button class="aba" id="botao_js">JS</button>&nbsp;&nbsp;&nbsp;
+    <button class="aba2" id="botao_Salvar">Salvar</button>
+    <button class="aba2" id="botao_Reiniciar">Reiniciar</button>
+    <br>
+    <br>
+    <center>
+        <textarea class="textarea" name="" id="textareaHTML" cols="30" rows="10">html</textarea>
+        <textarea class="textarea" name="" id="textareaCSS" cols="30" rows="10">css</textarea>
+        <textarea class="textarea" name="" id="textareaJS" cols="30" rows="10">js</textarea>
+        <br>
+ 
 
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
+        <p id="info"></p>
+ 
+        <h3 class="h3">Live Preview</h3>
 
-
+        <iframe src="" frameborder="0" class="iframe" id="live"></iframe>
+    </center>
 </body>
 <script>
-    var html = document.getElementById('html');
-    var css = document.getElementById('css');
-    var js = document.getElementById('js');
 
 
-    function Reiniciar() {
+    const botao_html = document.getElementById('botao_html')
+    const botao_css = document.getElementById('botao_css')
+    const botao_js = document.getElementById('botao_js')
+    const botao_Salvar = document.getElementById('botao_Salvar')
+    const botao_Reiniciar = document.getElementById('botao_Reiniciar')
+
+    const info = document.getElementById('info')
+    const autosave = document.getElementById('autosave')
+
+    const textareaHTML = document.getElementById('textareaHTML')
+    const textareaCSS = document.getElementById('textareaCSS')
+    const textareaJS = document.getElementById('textareaJS')
+
+
+
+    autosave.checked = false
+    if (localStorage.getItem('autosave')) {
+        if (localStorage.getItem('autosave') == '1') {
+            autosave.checked = true
+        } else {
+            autosave.checked = false
+        }
+    }
+    autosave.addEventListener('input', () => {
+        if (autosave.checked) {
+            localStorage.setItem('autosave', '1')
+        }
+        else {
+            localStorage.setItem('autosave', '0')
+        }
+    })
+
+
+
+    botao_Reiniciar.addEventListener('click', () => {
         localStorage.removeItem('html');
         localStorage.removeItem('css');
         localStorage.removeItem('js');
+        localStorage.removeItem('autosave');
         window.location.reload();
+    })
 
-    }
-    function salvarCode() {
-        localStorage.setItem('html', html.value);
-        localStorage.setItem('css', css.value);
-        localStorage.setItem('js', js.value);
+
+    botao_Salvar.addEventListener('click', () => {
+        salvarCode()
+        info.textContent = 'Código salvo com sucesso!'
+        setTimeout(() => {
+            info.textContent = ' '
+        }, 3000);
+    })
+
+    botao_html.addEventListener('click', () => {
+        ativarHTML()
+    })
+    botao_css.addEventListener('click', () => {
+        ativarCSS()
+    })
+    botao_js.addEventListener('click', () => {
+        ativarJS()
+    })
+    //-----------------------
+    textareaHTML.addEventListener('input', () => {
         document.getElementById('live').srcdoc = final();
-        msgbox('Sucesso','Codigo salvo com sucesso');
-    }
-
-    var pvez = 0;
-    function carregarCode() {
-        if (localStorage.getItem('html')) {
-            html.value = localStorage.getItem('html').toString();
-            css.value = localStorage.getItem('css').toString();
-            js.value = localStorage.getItem('js').toString();
-            document.getElementById('live').srcdoc = final();
-
-            msgbox('Sucesso','Codigo carregado com sucesso');
-            pvez++;
+        if (autosave.checked) {
+            salvarCode()
         }
-        else{
-            if(pvez!==0)
-            msgbox('Alerta','Codigo salvo nao existe',3000,0,'red');
+    })
+    textareaCSS.addEventListener('input', () => {
+        document.getElementById('live').srcdoc = final();
+        if (autosave.checked) {
+            salvarCode()
         }
-        pvez++;
+    })
+    textareaJS.addEventListener('input', () => {
+        document.getElementById('live').srcdoc = final();
+        if (autosave.checked) {
+            salvarCode()
+        }
+    })
+
+
+
+
+
+    function ativarHTML() {
+        botao_html.style.backgroundColor = '#666'
+        botao_css.style.backgroundColor = '#444'
+        botao_js.style.backgroundColor = '#444'
+
+        botao_html.style.borderTop = '5px solid lime'
+        botao_css.style.borderTop = '5px solid transparent'
+        botao_js.style.borderTop = '5px solid transparent'
+
+        textareaCSS.style.display = 'none'
+        textareaJS.style.display = 'none'
+        textareaHTML.style.display = 'block'
+    }
+    function ativarCSS() {
+        botao_html.style.backgroundColor = '#444'
+        botao_css.style.backgroundColor = '#666'
+        botao_js.style.backgroundColor = '#444'
+
+        botao_html.style.borderTop = '5px solid transparent'
+        botao_css.style.borderTop = '5px solid lime'
+        botao_js.style.borderTop = '5px solid transparent'
+
+        textareaCSS.style.display = 'block'
+        textareaJS.style.display = 'none'
+        textareaHTML.style.display = 'none'
+    }
+    function ativarJS() {
+        botao_html.style.backgroundColor = '#444'
+        botao_css.style.backgroundColor = '#444'
+        botao_js.style.backgroundColor = '#666'
+
+        botao_html.style.borderTop = '5px solid transparent'
+        botao_css.style.borderTop = '5px solid transparent'
+        botao_js.style.borderTop = '5px solid lime'
+
+        textareaCSS.style.display = 'none'
+        textareaJS.style.display = 'block'
+        textareaHTML.style.display = 'none'
     }
 
-    html.addEventListener('input', () => {
-        document.getElementById('live').srcdoc = final();
-    });
-
-    css.addEventListener('input', () => {
-        document.getElementById('live').srcdoc = final();
-    });
-
-    js.addEventListener('input', () => {
-        document.getElementById('live').srcdoc = final();
-    });
 
 
-    js.value = `
- document.getElementById('hi').addEventListener('click', () => {
-        alert('Hello buddy, Welcome to LiveServer');
-    });
-`;
-
-
-
-    function final() {
-
-        var finall = '<style>' +
-            css.value + '</style>' +
-            html.value;
-        var d = finall.replace('</body>', '</body><script>' + js.value + '< /script>');
-        var e = d.replace(' /script>', '/script>');
-
-        return e;
-    }
-
-    html.value = `<!DOCTYPE html>
+    textareaHTML.value = `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -221,332 +254,69 @@
 </body>
 </html>`;
 
-    css.value = `* {
-        border: 0;
-        margin: 0;
-        padding: 0;
-    }
+    textareaCSS.value = `* {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+html {
+    background-color: aliceblue;
+}
+button {
+    width: 90%;
+    background-color: rgb(100 200 100);
+    color: aliceblue;
+    padding: 5px;
+    border-radius: 5px;
+    max-width: 90%;
+    margin-top:30px;
+}
+button:hover {
+    background-color: green;
+    color: aliceblue;
+}
+`;
 
-    html {
-        background-color: aliceblue;
-    }
-    button {
-        width: 90%;
-        background-color: rgb(100 200 100);
-        color: aliceblue;
-        padding: 5px;
-        border-radius: 5px;
-        max-width: 90%;
-        margin-top:30px;
-    }
-    button:hover {
-        background-color: green;
-        color: aliceblue;
-    }
+    textareaJS.value = `document.getElementById('hi').addEventListener('click', () => {
+        alert('Hello buddy, Welcome to LiveServer');
+    });
 `;
 
 
+    function final() {
 
+        var finall = '<style>' +
+            textareaCSS.value + '</style>' +
+            textareaHTML.value;
+        var d = finall.replace('</body>', '</body><script>' + textareaJS.value + '< /script>');
+        var e = d.replace(' /script>', '/script>');
+
+        return e;
+    }
 
     setTimeout(() => {
-        carregarCode();
+        ativarHTML()
         document.getElementById('live').srcdoc = final();
-
-    }, 100);
-
-
-    //exemplos
-    function loginExample() {
-        html.value = `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <center>
-        <form action="" method="post">
-            <h2>Login</h2>
-        <input placeholder="Usuario" required type="text"><br>
-        <input placeholder="Senha" required type="password"><br>
-        <button type="submit" id="logar">Logar</button>
-    </form>
-    </center>
-</body>
-</html>`;
-
-        css.value = `* {
-        border: 0;
-        margin: 0;
-        padding: 0;
-        border-radius: 5px;
-    }
-
-    html {
-        background-color: white;
-    }
-    button {
-        width: 90%;
-        background-color: rgb(100 200 100);
-        color: aliceblue;
-        padding:10px;
-        border-radius: 5px;
-        max-width: 90%;
-        margin-top:30px;
-    }
-    button:hover {
-        background-color: green;
-        color: aliceblue;
-    }
-    input{
-        background-color: rgb(230 230 230);
-        width: 90%;
-        margin-top:10px;
-        border:1px solid black;
-        padding:10px;
-    }
-    form{
-        border-radius: 10px;
-        margin-top:50px;
-        width: 50%;
-        border:1px solid gray;
-        padding:10px;
-        text-align:center;
-    }
-`;
-
-        js.value = `
- document.getElementById('logar').addEventListener('click', () => {
-        alert('Well done');
-    });
-`;
-
-        document.getElementById('live').srcdoc = final();
-    }
-
-    function cadastroExample() {
-        html.value = `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <center>
-        <form action="" method="post">
-            <h2>Cadastro</h2>
-        <input placeholder="Nome" required type="text"><br>
-        <input placeholder="Sobrenome" required type="text"><br>
-        <input placeholder="E-mail" required type="email"><br>
-        <input placeholder="Senha" required type="password"><br>
-        <input placeholder="Repita a Senha" required type="password"><br>
-        <button type="submit" id="logar">Cadastrar</button>
-    </form>
-    </center>
-</body>
-</html>`;
-
-        css.value = `* {
-        border: 0;
-        margin: 0;
-        padding: 0;
-        border-radius: 5px;
-    }
-
-    html {
-        background-color: white;
-    }
-    button {
-        width: 90%;
-        background-color: rgb(100 200 100);
-        color: aliceblue;
-        padding:10px;
-        border-radius: 5px;
-        max-width: 90%;
-        margin-top:30px;
-    }
-    button:hover {
-        background-color: green;
-        color: aliceblue;
-    }
-    input{
-        background-color: rgb(230 230 230);
-        width: 90%;
-        margin-top:10px;
-        border:1px solid black;
-        padding:10px;
-    }
-    form{
-        border-radius: 10px;
-        margin-top:50px;
-        width: 50%;
-        border:1px solid gray;
-        padding:10px;
-        text-align:center;
-    }
-`;
-
-        js.value = `
- document.getElementById('logar').addEventListener('click', () => {
-        alert('Well done');
-    });
-`;
-
-        document.getElementById('live').srcdoc = final();
-    }
-
-    function msgbox(titulo, texto, tempo = 1000, layout = 0, corFundo = 'green', corfonte = 'aliceblue', borderradius = true, textoCentralizado = false) {
-    var topo = 10;
-    var opacidade = 0.0;
-    const rect = document.createElement('div');
-    rect.style.position = 'fixed';
-    rect.style.zIndex = '10000';
-    rect.style.minWidth = '25%';
-    rect.style.maxWidth = '50%';
-
-    //rect.style.height = '100px';
-    if (borderradius) {
-        rect.style.borderRadius = '10px';
-    }
-    rect.style.backgroundColor = corFundo;
-
-
-
-
-    rect.style.padding = '10px';
-    rect.style.opacity = opacidade;
-
-
-    const titlee = document.createElement('span');
-    titlee.innerHTML = titulo;
-    titlee.style.color = corfonte;
-
-    const alerta = document.createElement('span');
-    alerta.innerHTML = '<br>' + texto;
-    alerta.style.color = corfonte;
-
-
-    rect.appendChild(titlee);
-    rect.appendChild(alerta);
-    document.body.appendChild(rect);
-
-    switch (layout) {
-        case 0:
-            rect.style.right = '10px';
-            topo = 10;
-            rect.style.top = topo + 'px';
-            if (textoCentralizado) { rect.style.textAlign = 'center'; }
-            else { rect.style.textAlign = 'right'; }
-            break;
-        case 1:
-            rect.style.left = '10px';
-            topo = 10;
-            rect.style.top = topo + 'px';
-            if (textoCentralizado) { rect.style.textAlign = 'center'; }
-            else { rect.style.textAlign = 'left'; }
-            break;
-        case 2:
-            rect.style.left = '10px';
-            topo = 10;
-            rect.style.bottom = topo + 'px';
-            if (textoCentralizado) { rect.style.textAlign = 'center'; }
-            else { rect.style.textAlign = 'left'; }
-            break;
-
-        case 3:
-            rect.style.right = '10px';
-            topo = 10;
-            rect.style.bottom = topo + 'px';
-            if (textoCentralizado) { rect.style.textAlign = 'center'; }
-            else { rect.style.textAlign = 'right'; }
-            break;
-
-
-        case 4:
-
-            rect.style.right = ((window.innerWidth / 2) - (rect.offsetWidth / 2)) + 'px';
-            topo = 10;
-            rect.style.top = topo + 'px';
-
-            rect.style.textAlign = 'center';
-            break;
-
-        case 5:
-            rect.style.right = ((window.innerWidth / 2) - (rect.offsetWidth / 2)) + 'px';
-            rect.style.top = ((window.innerHeight / 2) - (rect.offsetHeight / 2)) + 'px';
-
-            rect.style.textAlign = 'center';
-            break;
-
-        case 6:
-            rect.style.right = ((window.innerWidth / 2) - (rect.offsetWidth / 2)) + 'px';
-            topo = 10;
-            rect.style.bottom = topo + 'px';
-
-            rect.style.textAlign = 'center';
-            break;
-
-        default:
-            rect.style.right = '10px';
-            topo = 10;
-            rect.style.top = topo + 'px';
-            if (textoCentralizado) { rect.style.textAlign = 'center'; }
-            else { rect.style.textAlign = 'right'; }
-            break;
-    }
-
-    var lp = setInterval(() => {
-        if (opacidade <= 0.9) {
-            opacidade += 0.002;
-            rect.style.opacity = opacidade;
-        }
-        else {
-            clearInterval(lp);
-            setTimeout(() => {
-                var loop = setInterval(() => {
-                    if (topo !== window.innerHeight) {
-                        topo++;
-
-                        if (layout === 0 || layout === 1) { rect.style.top = topo + 'px'; }
-
-                        opacidade -= 0.002;
-                        rect.style.opacity = opacidade;
-                    }
-                    else {
-
-                        clearInterval(loop);
-                        rect.remove();
-                    }
-
-
-                }, 1);
-            }, tempo);
-        }
-
-
     }, 1);
 
-}
 
-    function nulll() {
-        html.value = `
-        
-        `;
 
-        css.value = `
-        
-        `;
+    if (localStorage.getItem('html')) {
+        textareaHTML.value = localStorage.getItem('html').toString();
+        textareaCSS.value = localStorage.getItem('css').toString();
+        textareaJS.value = localStorage.getItem('js').toString();
+        document.getElementById('live').srcdoc = final();
 
-        js.value = `
-        
-        `;
+    }
 
+    function salvarCode() {
+        localStorage.setItem('html', textareaHTML.value);
+        localStorage.setItem('css', textareaCSS.value);
+        localStorage.setItem('js', textareaJS.value);
         document.getElementById('live').srcdoc = final();
     }
+
+
 
 
 </script>
