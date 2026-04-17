@@ -1,325 +1,498 @@
 <!DOCTYPE html>
-<html lang="pt-br">
-
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Server</title>
-</head>
-<style>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HTML Runner</title>
+
+  <style>
+    :root {
+      --bg: #0b1020;
+      --bg-soft: #131a2e;
+      --panel: rgba(19, 26, 46, 0.88);
+      --panel-2: rgba(255, 255, 255, 0.04);
+      --text: #e8edf9;
+      --muted: #9aa7c7;
+      --border: rgba(255, 255, 255, 0.08);
+      --primary: #6ea8fe;
+      --primary-strong: #4d8dff;
+      --success: #27c281;
+      --danger: #e45d75;
+      --warning: #f3b95f;
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+      --radius-xl: 24px;
+      --radius-lg: 18px;
+      --radius-md: 14px;
+      --radius-sm: 10px;
+    }
+
     * {
-        border: 0;
-        margin: 0;
-        padding: 0;
-        cursor: pointer;
--webkit-tap-highlight-color: transparent;
-        -webkit-touch-callout: none;
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
-    html {
-        background-color: #333;
-        user-select: none;
-        color: aliceblue;
+    html, body {
+      min-height: 100%;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(110, 168, 254, 0.18), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(39, 194, 129, 0.14), transparent 26%),
+        linear-gradient(135deg, #0a0f1d 0%, #10182c 55%, #0b1020 100%);
+      color: var(--text);
     }
 
-    .aba {
-        background-color: #444;
-        color: aliceblue;
-        padding: 10px;
-        margin-left: 10px;
-        border-top: 5px solid transparent;
-        transition: 0.3s all ease;
-        border-radius: 5px;
+    body {
+      padding: 32px 18px 56px;
     }
 
-    .aba2 {
-        background-color: rgb(27, 93, 59);
-        color: aliceblue;
-        padding: 10px;
-        margin-left: 10px;
-        border-top: 5px solid transparent;
-        border-radius: 5px;
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
     }
 
-    .textarea {
-        width: 90%;
-        background-color: #666;
-        color: aliceblue;
-        padding: 5px;
-        border-radius: 5px;
-        max-width: 90%;
-        resize: none;
+    .hero {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 22px;
     }
 
-    .iframe {
-        background-color: aliceblue;
-        width: 90%;
-        max-width: 90%;
-        background-color: #666;
-        height: 300px;
-        resize: both;
-        border-radius: 5px;
-        animation: borda 3s infinite;
+    .badge {
+      width: fit-content;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
-    #info {
-        color: yellow;
+    .hero h1 {
+      font-size: clamp(2rem, 4vw, 3.3rem);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
     }
 
-    
-    @keyframes borda {
-        0% {
-            box-shadow:none;
-        }
-
-        50% {
-            box-shadow:0px 0px 30px rgb(6, 128, 243);
-        }
-
-        100% {
-            box-shadow:none;
-        }
-    }
-</style>
-
-<body>
-    <br>
-    <center>
-        <input type="checkbox" name="autosave" id="autosave">
-        <label for="autosave">&nbsp;&nbsp;Salvamento Automatico</label>
-    </center>
-    <br> 
-    <button class="aba" id="botao_html">HTML</button>
-    <button class="aba" id="botao_css">CSS</button>
-    <button class="aba" id="botao_js">JS</button>&nbsp;&nbsp;&nbsp;
-    <button class="aba2" id="botao_Salvar">Salvar</button>
-    <button class="aba2" id="botao_Reiniciar">Reiniciar</button>
-    <br>
-    <br>
-    <center>
-        <textarea class="textarea" name="" id="textareaHTML" cols="30" rows="10">html</textarea>
-        <textarea class="textarea" name="" id="textareaCSS" cols="30" rows="10">css</textarea>
-        <textarea class="textarea" name="" id="textareaJS" cols="30" rows="10">js</textarea>
-        <br>
- 
-
-        <p id="info"></p>
- 
-        <h3 class="h3">Live Preview</h3>
-
-        <iframe src="" frameborder="0" class="iframe" id="live"></iframe>
-    </center>
-</body>
-<script>
-
-
-    const botao_html = document.getElementById('botao_html')
-    const botao_css = document.getElementById('botao_css')
-    const botao_js = document.getElementById('botao_js')
-    const botao_Salvar = document.getElementById('botao_Salvar')
-    const botao_Reiniciar = document.getElementById('botao_Reiniciar')
-
-    const info = document.getElementById('info')
-    const autosave = document.getElementById('autosave')
-
-    const textareaHTML = document.getElementById('textareaHTML')
-    const textareaCSS = document.getElementById('textareaCSS')
-    const textareaJS = document.getElementById('textareaJS')
-
-
-
-    autosave.checked = false
-    if (localStorage.getItem('autosave')) {
-        if (localStorage.getItem('autosave') == '1') {
-            autosave.checked = true
-        } else {
-            autosave.checked = false
-        }
-    }
-    autosave.addEventListener('input', () => {
-        if (autosave.checked) {
-            localStorage.setItem('autosave', '1')
-        }
-        else {
-            localStorage.setItem('autosave', '0')
-        }
-    })
-
-
-
-    botao_Reiniciar.addEventListener('click', () => {
-        localStorage.removeItem('html');
-        localStorage.removeItem('css');
-        localStorage.removeItem('js');
-        localStorage.removeItem('autosave');
-        window.location.reload();
-    })
-
-
-    botao_Salvar.addEventListener('click', () => {
-        salvarCode()
-        info.textContent = 'Código salvo com sucesso!'
-        setTimeout(() => {
-            info.textContent = ' '
-        }, 3000);
-    })
-
-    botao_html.addEventListener('click', () => {
-        ativarHTML()
-    })
-    botao_css.addEventListener('click', () => {
-        ativarCSS()
-    })
-    botao_js.addEventListener('click', () => {
-        ativarJS()
-    })
-    //-----------------------
-    textareaHTML.addEventListener('input', () => {
-        document.getElementById('live').srcdoc = final();
-        if (autosave.checked) {
-            salvarCode()
-        }
-    })
-    textareaCSS.addEventListener('input', () => {
-        document.getElementById('live').srcdoc = final();
-        if (autosave.checked) {
-            salvarCode()
-        }
-    })
-    textareaJS.addEventListener('input', () => {
-        document.getElementById('live').srcdoc = final();
-        if (autosave.checked) {
-            salvarCode()
-        }
-    })
-
-
-
-
-
-    function ativarHTML() {
-        botao_html.style.backgroundColor = '#666'
-        botao_css.style.backgroundColor = '#444'
-        botao_js.style.backgroundColor = '#444'
-
-        botao_html.style.borderTop = '5px solid lime'
-        botao_css.style.borderTop = '5px solid transparent'
-        botao_js.style.borderTop = '5px solid transparent'
-
-        textareaCSS.style.display = 'none'
-        textareaJS.style.display = 'none'
-        textareaHTML.style.display = 'block'
-    }
-    function ativarCSS() {
-        botao_html.style.backgroundColor = '#444'
-        botao_css.style.backgroundColor = '#666'
-        botao_js.style.backgroundColor = '#444'
-
-        botao_html.style.borderTop = '5px solid transparent'
-        botao_css.style.borderTop = '5px solid lime'
-        botao_js.style.borderTop = '5px solid transparent'
-
-        textareaCSS.style.display = 'block'
-        textareaJS.style.display = 'none'
-        textareaHTML.style.display = 'none'
-    }
-    function ativarJS() {
-        botao_html.style.backgroundColor = '#444'
-        botao_css.style.backgroundColor = '#444'
-        botao_js.style.backgroundColor = '#666'
-
-        botao_html.style.borderTop = '5px solid transparent'
-        botao_css.style.borderTop = '5px solid transparent'
-        botao_js.style.borderTop = '5px solid lime'
-
-        textareaCSS.style.display = 'none'
-        textareaJS.style.display = 'block'
-        textareaHTML.style.display = 'none'
+    .hero p {
+      max-width: 720px;
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.7;
     }
 
+    .layout {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 22px;
+      align-items: start;
+    }
 
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
 
-    textareaHTML.value = `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    .editor-panel {
+      padding: 22px;
+    }
+
+    .projects-panel {
+      padding: 22px;
+      position: sticky;
+      top: 18px;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .section-head h2 {
+      font-size: 1.15rem;
+      letter-spacing: -0.02em;
+    }
+
+    .section-head span {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .field label {
+      font-size: 0.92rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    input, textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: var(--panel-2);
+      color: var(--text);
+      border-radius: var(--radius-md);
+      outline: none;
+      transition: 0.2s ease;
+    }
+
+    input {
+      height: 52px;
+      padding: 0 16px;
+      font-size: 1rem;
+    }
+
+    textarea {
+      min-height: 430px;
+      resize: vertical;
+      padding: 16px;
+      font-size: 0.96rem;
+      line-height: 1.6;
+      font-family: "Fira Code", "Consolas", monospace;
+    }
+
+    input:focus, textarea:focus {
+      border-color: rgba(110, 168, 254, 0.65);
+      box-shadow: 0 0 0 4px rgba(110, 168, 254, 0.14);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 6px;
+    }
+
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 13px 18px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.16s ease, opacity 0.16s ease, background 0.16s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-strong));
+      color: white;
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, #32d399, #1fb979);
+      color: #062715;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.07);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-danger {
+      background: rgba(228, 93, 117, 0.14);
+      color: #ff9fb0;
+      border: 1px solid rgba(228, 93, 117, 0.22);
+    }
+
+    .projects-list {
+      display: grid;
+      gap: 12px;
+      max-height: 72vh;
+      overflow: auto;
+      padding-right: 2px;
+    }
+
+    .projects-list.empty {
+      padding: 18px;
+      border: 1px dashed var(--border);
+      border-radius: var(--radius-lg);
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .project-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 14px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .project-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .project-name {
+      font-weight: 700;
+      line-height: 1.4;
+      word-break: break-word;
+    }
+
+    .project-index {
+      font-size: 0.75rem;
+      color: var(--muted);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 6px 10px;
+      white-space: nowrap;
+    }
+
+    .project-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .project-actions button {
+      flex: 1;
+      min-width: 92px;
+      padding: 10px 12px;
+      font-size: 0.88rem;
+    }
+
+    .helper {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: var(--radius-lg);
+      background: rgba(110, 168, 254, 0.08);
+      border: 1px solid rgba(110, 168, 254, 0.18);
+      color: #cfdcff;
+      line-height: 1.65;
+      font-size: 0.93rem;
+    }
+
+    .helper strong {
+      color: white;
+    }
+
+    @media (max-width: 920px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .projects-panel {
+        position: static;
+      }
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 18px 12px 28px;
+      }
+
+      .editor-panel,
+      .projects-panel {
+        padding: 16px;
+        border-radius: 18px;
+      }
+
+      .hero p {
+        font-size: 0.95rem;
+      }
+
+      textarea {
+        min-height: 320px;
+      }
+
+      .project-actions {
+        grid-template-columns: 1fr;
+      }
+
+      .project-actions button {
+        flex: unset;
+        width: 100%;
+      }
+
+      .actions button {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 <body>
-    <center>
-        <button id="hi">Hello</button>
-    </center>
-</body>
-</html>`;
+  <div class="container">
+    <header class="hero">
+      <div class="badge">HTML Runner</div>
+      <h1>Crie, salve e execute seus projetos HTML com mais conforto</h1>
+      <p>
+        Um editor simples para testar snippets, guardar projetos localmente e abrir tudo com um clique.
+      </p>
+    </header>
 
-    textareaCSS.value = `* {
-    border: 0;
-    margin: 0;
-    padding: 0;
-}
-html {
-    background-color: aliceblue;
-}
-button {
-    width: 90%;
-    background-color: rgb(100 200 100);
-    color: aliceblue;
-    padding: 5px;
-    border-radius: 5px;
-    max-width: 90%;
-    margin-top:30px;
-}
-button:hover {
-    background-color: green;
-    color: aliceblue;
-}
-`;
+    <main class="layout">
+      <section class="panel editor-panel">
+        <div class="section-head">
+          <div>
+            <h2>Novo projeto</h2>
+            <span>Escreva o nome e cole seu HTML abaixo</span>
+          </div>
+        </div>
 
-    textareaJS.value = `document.getElementById('hi').addEventListener('click', () => {
-        alert('Hello buddy, Welcome to LiveServer');
+        <div class="field">
+          <label for="nome">Nome do projeto</label>
+          <input type="text" id="nome" placeholder="Ex: Landing page de teste" />
+        </div>
+
+        <div class="field">
+          <label for="textarea">Código HTML</label>
+          <textarea id="textarea" spellcheck="false"><script>alert('alerta');</script></textarea>
+        </div>
+
+        <div class="actions">
+          <button id="Executar" class="btn-primary">Executar agora</button>
+          <button id="Salvar" class="btn-success">Salvar projeto</button>
+        </div>
+
+        <div class="helper">
+          <strong>Dica:</strong> o conteúdo fica salvo no navegador via <code>localStorage</code>. Isso é ótimo para testes rápidos e protótipos locais.
+        </div>
+      </section>
+
+      <aside class="panel projects-panel">
+        <div class="section-head">
+          <div>
+            <h2>Projetos salvos</h2>
+            <span id="projectCount">0 itens</span>
+          </div>
+        </div>
+
+        <div id="tables" class="projects-list"></div>
+      </aside>
+    </main>
+  </div>
+
+  <script>
+    const div = document.getElementById("tables");
+    const inputNome = document.getElementById("nome");
+    const textarea = document.getElementById("textarea");
+    const projectCount = document.getElementById("projectCount");
+
+    const arraia_nome = [];
+    const arraia_html = [];
+    const arraia_index = [];
+
+    for (let i = 0; i < 100; i++) {
+      if (localStorage.getItem("deploy_" + i + "_nome")) {
+        arraia_nome.push(localStorage.getItem("deploy_" + i + "_nome"));
+        arraia_html.push(localStorage.getItem("deploy_" + i + "_html"));
+        arraia_index.push(i);
+      }
+    }
+
+    function renderProjects() {
+      projectCount.textContent = `${arraia_nome.length} ${arraia_nome.length === 1 ? "item" : "itens"}`;
+
+      if (!arraia_nome.length) {
+        div.className = "projects-list empty";
+        div.innerHTML = "Nenhum projeto salvo ainda.";
+        return;
+      }
+
+      div.className = "projects-list";
+
+      let s = "";
+
+      arraia_nome.forEach((nome, ct) => {
+        s += `
+          <div class="project-card">
+            <div class="project-top">
+              <div class="project-name">${nome}</div>
+              <div class="project-index">#${arraia_index[ct]}</div>
+            </div>
+
+            <div class="project-actions">
+              <button id="Executar_${ct}" class="btn-primary">Executar</button>
+              <button id="Ver_${ct}" class="btn-secondary">Ver código</button>
+              <button id="Apagar_${ct}" class="btn-danger">Apagar</button>
+            </div>
+          </div>
+        `;
+      });
+
+      div.innerHTML = s;
+
+      arraia_nome.forEach((_, ct) => {
+        document.getElementById("Executar_" + ct).addEventListener("click", () => {
+          document.open();
+          document.write(localStorage.getItem("deploy_" + arraia_index[ct] + "_html"));
+          document.close();
+        });
+
+        document.getElementById("Ver_" + ct).addEventListener("click", () => {
+          inputNome.value = localStorage.getItem("deploy_" + arraia_index[ct] + "_nome");
+          textarea.value = localStorage.getItem("deploy_" + arraia_index[ct] + "_html");
+          window.scrollTo({ top: 0, behavior: "smooth" });
+          textarea.focus();
+        });
+
+        document.getElementById("Apagar_" + ct).addEventListener("click", () => {
+          localStorage.removeItem("deploy_" + arraia_index[ct] + "_nome");
+          localStorage.removeItem("deploy_" + arraia_index[ct] + "_html");
+          window.location.reload();
+        });
+      });
+    }
+
+    document.getElementById("Executar").addEventListener("click", () => {
+      const sss = textarea.value;
+      document.open();
+      document.write(sss);
+      document.close();
     });
-`;
 
+    document.getElementById("Salvar").addEventListener("click", () => {
+      if (inputNome.value.trim() === "") {
+        const t = new Date();
+        inputNome.value =
+          "Codigo " +
+          t.getDate() + "/" +
+          (t.getMonth() + 1) + "/" +
+          t.getFullYear() +
+          " - " +
+          t.getHours() + ":" +
+          t.getMinutes() + ":" +
+          t.getSeconds();
+      }
 
-    function final() {
+      for (let i = 0; i < 100; i++) {
+        if (!localStorage.getItem("deploy_" + i + "_nome")) {
+          localStorage.setItem("deploy_" + i + "_nome", inputNome.value);
+          localStorage.setItem("deploy_" + i + "_html", textarea.value);
+          break;
+        }
+      }
 
-        var finall = '<style>' +
-            textareaCSS.value + '</style>' +
-            textareaHTML.value;
-        var d = finall.replace('</body>', '</body><script>' + textareaJS.value + '< /script>');
-        var e = d.replace(' /script>', '/script>');
+      window.location.reload();
+    });
 
-        return e;
-    }
-
-    setTimeout(() => {
-        ativarHTML()
-        document.getElementById('live').srcdoc = final();
-    }, 1);
-
-
-
-    if (localStorage.getItem('html')) {
-        textareaHTML.value = localStorage.getItem('html').toString();
-        textareaCSS.value = localStorage.getItem('css').toString();
-        textareaJS.value = localStorage.getItem('js').toString();
-        document.getElementById('live').srcdoc = final();
-
-    }
-
-    function salvarCode() {
-        localStorage.setItem('html', textareaHTML.value);
-        localStorage.setItem('css', textareaCSS.value);
-        localStorage.setItem('js', textareaJS.value);
-        document.getElementById('live').srcdoc = final();
-    }
-
-
-
-
-</script>
-
+    renderProjects();
+  </script>
+</body>
 </html>
