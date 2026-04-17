@@ -1,325 +1,622 @@
 <!DOCTYPE html>
-<html lang="pt-br">
-
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Server</title>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Live Server</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --bg-soft: rgba(17, 24, 39, 0.78);
+      --panel: rgba(15, 23, 42, 0.86);
+      --border: rgba(148, 163, 184, 0.16);
+      --text: #e5eefc;
+      --muted: #93a4c3;
+      --accent: #7c3aed;
+      --accent-2: #22d3ee;
+      --success: #22c55e;
+      --danger: #ef4444;
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+      --radius: 22px;
+      --editor-font: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --ui-font: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body { min-height: 100%; }
+
+    body {
+      font-family: var(--ui-font);
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(124, 58, 237, 0.28), transparent 30%),
+        radial-gradient(circle at top right, rgba(34, 211, 238, 0.16), transparent 24%),
+        linear-gradient(160deg, #050816 0%, #0b1020 50%, #060913 100%);
+      padding: 28px;
+    }
+
+    .app {
+      width: min(1400px, 100%);
+      margin: 0 auto;
+      display: grid;
+      gap: 22px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 22px 24px;
+      border: 1px solid var(--border);
+      background: var(--bg-soft);
+      backdrop-filter: blur(18px);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      flex-wrap: wrap;
+    }
+
+    .brand { display: flex; align-items: center; gap: 16px; }
+
+    .brand-badge {
+      width: 52px;
+      height: 52px;
+      display: grid;
+      place-items: center;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: white;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      box-shadow: 0 12px 30px rgba(124, 58, 237, 0.35);
+    }
+
+    .brand h1 {
+      font-size: clamp(1.3rem, 2vw, 2rem);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .brand p {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .switch {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.04);
+      color: var(--muted);
+      font-size: 0.92rem;
+      user-select: none;
+    }
+
+    .switch input {
+      appearance: none;
+      width: 44px;
+      height: 24px;
+      border-radius: 999px;
+      background: rgba(148, 163, 184, 0.3);
+      position: relative;
+      outline: none;
+      cursor: pointer;
+      transition: 0.25s ease;
+    }
+
+    .switch input::before {
+      content: "";
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: white;
+      transition: 0.25s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    }
+
+    .switch input:checked {
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    }
+
+    .switch input:checked::before {
+      transform: translateX(20px);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.05fr 1fr;
+      gap: 22px;
+      min-height: 72vh;
+    }
+
+    .panel {
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.86);
+      backdrop-filter: blur(16px);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 18px 0;
+      flex-wrap: wrap;
+    }
+
+    .panel-title h2 {
+      font-size: 1.05rem;
+      margin-bottom: 4px;
+    }
+
+    .panel-title p {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding: 16px 18px 12px;
+    }
+
+    .tab, .btn {
+      border: 1px solid transparent;
+      border-radius: 14px;
+      padding: 11px 16px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      transition: 0.25s ease;
+      cursor: pointer;
+    }
+
+    .tab {
+      background: rgba(255,255,255,0.05);
+      color: var(--muted);
+      border-color: rgba(255,255,255,0.06);
+    }
+
+    .tab:hover {
+      color: var(--text);
+      transform: translateY(-1px);
+      background: rgba(255,255,255,0.08);
+    }
+
+    .tab.active {
+      color: white;
+      background: linear-gradient(135deg, rgba(124,58,237,0.95), rgba(34,211,238,0.85));
+      box-shadow: 0 10px 24px rgba(124, 58, 237, 0.28);
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding: 0 18px 16px;
+    }
+
+    .btn {
+      color: white;
+      background: rgba(255,255,255,0.05);
+      border-color: rgba(255,255,255,0.08);
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      background: rgba(255,255,255,0.08);
+    }
+
+    .btn.primary {
+      background: linear-gradient(135deg, var(--success), #16a34a);
+      box-shadow: 0 10px 24px rgba(34, 197, 94, 0.25);
+    }
+
+    .btn.danger {
+      background: linear-gradient(135deg, var(--danger), #dc2626);
+      box-shadow: 0 10px 24px rgba(239, 68, 68, 0.2);
+    }
+
+    .editor-wrap { padding: 0 18px 18px; }
+
+    .editor-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-size: 0.88rem;
+      flex-wrap: wrap;
+    }
+
+    .editor-shell {
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: #0a0f1f;
+    }
+
+    .editor-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.24);
+    }
+
+    .dot:nth-child(1) { background: #fb7185; }
+    .dot:nth-child(2) { background: #fbbf24; }
+    .dot:nth-child(3) { background: #34d399; }
+
+    .editor-label {
+      margin-left: auto;
+      font-size: 0.82rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 490px;
+      border: 0;
+      outline: none;
+      resize: vertical;
+      background: transparent;
+      color: #dbeafe;
+      padding: 18px;
+      font: 500 0.95rem/1.65 var(--editor-font);
+      tab-size: 2;
+    }
+
+    .hidden { display: none; }
+
+    .preview-area {
+      padding: 18px;
+      display: grid;
+      gap: 14px;
+      height: 100%;
+    }
+
+    .preview-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .status {
+      min-height: 22px;
+      font-size: 0.92rem;
+      color: #86efac;
+    }
+
+    .preview-card {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      min-height: 100%;
+      border-radius: 20px;
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.03));
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .browser-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.14);
+    }
+
+    .browser-url {
+      flex: 1;
+      min-width: 0;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.05);
+      color: var(--muted);
+      font-size: 0.88rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    iframe {
+      width: 100%;
+      min-height: 620px;
+      background: white;
+      border: 0;
+    }
+
+    .footer-note {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .chip {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    @media (max-width: 1080px) {
+      .layout { grid-template-columns: 1fr; }
+      textarea { min-height: 360px; }
+      iframe { min-height: 500px; }
+    }
+
+    @media (max-width: 720px) {
+      body { padding: 16px; }
+      .topbar { padding: 18px; }
+      textarea { min-height: 300px; font-size: 0.9rem; }
+      iframe { min-height: 420px; }
+    }
+  </style>
 </head>
-<style>
-    * {
-        border: 0;
-        margin: 0;
-        padding: 0;
-        cursor: pointer;
--webkit-tap-highlight-color: transparent;
-        -webkit-touch-callout: none;
-    }
-
-    html {
-        background-color: #333;
-        user-select: none;
-        color: aliceblue;
-    }
-
-    .aba {
-        background-color: #444;
-        color: aliceblue;
-        padding: 10px;
-        margin-left: 10px;
-        border-top: 5px solid transparent;
-        transition: 0.3s all ease;
-        border-radius: 5px;
-    }
-
-    .aba2 {
-        background-color: rgb(27, 93, 59);
-        color: aliceblue;
-        padding: 10px;
-        margin-left: 10px;
-        border-top: 5px solid transparent;
-        border-radius: 5px;
-    }
-
-    .textarea {
-        width: 90%;
-        background-color: #666;
-        color: aliceblue;
-        padding: 5px;
-        border-radius: 5px;
-        max-width: 90%;
-        resize: none;
-    }
-
-    .iframe {
-        background-color: aliceblue;
-        width: 90%;
-        max-width: 90%;
-        background-color: #666;
-        height: 300px;
-        resize: both;
-        border-radius: 5px;
-        animation: borda 3s infinite;
-    }
-
-    #info {
-        color: yellow;
-    }
-
-    
-    @keyframes borda {
-        0% {
-            box-shadow:none;
-        }
-
-        50% {
-            box-shadow:0px 0px 30px rgb(6, 128, 243);
-        }
-
-        100% {
-            box-shadow:none;
-        }
-    }
-</style>
-
 <body>
-    <br>
-    <center>
-        <input type="checkbox" name="autosave" id="autosave">
-        <label for="autosave">&nbsp;&nbsp;Salvamento Automatico</label>
-    </center>
-    <br> 
-    <button class="aba" id="botao_html">HTML</button>
-    <button class="aba" id="botao_css">CSS</button>
-    <button class="aba" id="botao_js">JS</button>&nbsp;&nbsp;&nbsp;
-    <button class="aba2" id="botao_Salvar">Salvar</button>
-    <button class="aba2" id="botao_Reiniciar">Reiniciar</button>
-    <br>
-    <br>
-    <center>
-        <textarea class="textarea" name="" id="textareaHTML" cols="30" rows="10">html</textarea>
-        <textarea class="textarea" name="" id="textareaCSS" cols="30" rows="10">css</textarea>
-        <textarea class="textarea" name="" id="textareaJS" cols="30" rows="10">js</textarea>
-        <br>
- 
+  <main class="app">
+    <section class="topbar">
+      <div class="brand">
+        <div class="brand-badge">LS</div>
+        <div>
+          <h1>Live Server</h1>
+          <p>Edite HTML, CSS e JavaScript com visualização instantânea.</p>
+        </div>
+      </div>
 
-        <p id="info"></p>
- 
-        <h3 class="h3">Live Preview</h3>
+      <label class="switch" for="autosave">
+        <input type="checkbox" id="autosave" />
+        <span>Salvamento automático</span>
+      </label>
+    </section>
 
-        <iframe src="" frameborder="0" class="iframe" id="live"></iframe>
-    </center>
-</body>
-<script>
+    <section class="layout">
+      <article class="panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <h2>Editor</h2>
+            <p>Troque entre HTML, CSS e JS mantendo o preview atualizado em tempo real.</p>
+          </div>
+        </div>
 
+        <div class="tabs">
+          <button class="tab active" id="botao_html">HTML</button>
+          <button class="tab" id="botao_css">CSS</button>
+          <button class="tab" id="botao_js">JS</button>
+        </div>
 
-    const botao_html = document.getElementById('botao_html')
-    const botao_css = document.getElementById('botao_css')
-    const botao_js = document.getElementById('botao_js')
-    const botao_Salvar = document.getElementById('botao_Salvar')
-    const botao_Reiniciar = document.getElementById('botao_Reiniciar')
+        <div class="actions">
+          <button class="btn primary" id="botao_Salvar">Salvar</button>
+          <button class="btn danger" id="botao_Reiniciar">Reiniciar</button>
+        </div>
 
-    const info = document.getElementById('info')
-    const autosave = document.getElementById('autosave')
+        <div class="editor-wrap">
+          <div class="editor-meta">
+            <span id="editorTitle">Arquivo atual: HTML</span>
+            <span>LocalStorage habilitado</span>
+          </div>
 
-    const textareaHTML = document.getElementById('textareaHTML')
-    const textareaCSS = document.getElementById('textareaCSS')
-    const textareaJS = document.getElementById('textareaJS')
+          <div class="editor-shell">
+            <div class="editor-bar">
+              <span class="dot"></span>
+              <span class="dot"></span>
+              <span class="dot"></span>
+              <span class="editor-label" id="editorLabel">index.html</span>
+            </div>
 
+            <textarea id="textareaHTML" spellcheck="false"></textarea>
+            <textarea id="textareaCSS" class="hidden" spellcheck="false"></textarea>
+            <textarea id="textareaJS" class="hidden" spellcheck="false"></textarea>
+          </div>
+        </div>
+      </article>
 
+      <article class="panel">
+        <div class="preview-area">
+          <div class="preview-top">
+            <div class="panel-title">
+              <h2>Live Preview</h2>
+              <p>Renderização do código atualizado automaticamente.</p>
+            </div>
+            <p class="status" id="info"></p>
+          </div>
 
-    autosave.checked = false
-    if (localStorage.getItem('autosave')) {
-        if (localStorage.getItem('autosave') == '1') {
-            autosave.checked = true
-        } else {
-            autosave.checked = false
-        }
-    }
+          <div class="preview-card">
+            <div class="browser-bar">
+              <span class="dot"></span>
+              <span class="dot"></span>
+              <span class="dot"></span>
+              <div class="browser-url">preview://local/index.html</div>
+            </div>
+            <iframe id="live" title="Pré-visualização em tempo real"></iframe>
+          </div>
+
+          <div class="footer-note">
+            <span class="chip">Preview em tempo real</span>
+            <span class="chip">HTML + CSS + JS</span>
+            <span class="chip">Interface responsiva</span>
+          </div>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <script>
+    const botao_html = document.getElementById('botao_html');
+    const botao_css = document.getElementById('botao_css');
+    const botao_js = document.getElementById('botao_js');
+    const botao_Salvar = document.getElementById('botao_Salvar');
+    const botao_Reiniciar = document.getElementById('botao_Reiniciar');
+    const info = document.getElementById('info');
+    const autosave = document.getElementById('autosave');
+    const textareaHTML = document.getElementById('textareaHTML');
+    const textareaCSS = document.getElementById('textareaCSS');
+    const textareaJS = document.getElementById('textareaJS');
+    const editorTitle = document.getElementById('editorTitle');
+    const editorLabel = document.getElementById('editorLabel');
+    const iframe = document.getElementById('live');
+    const tabs = [botao_html, botao_css, botao_js];
+
+    autosave.checked = localStorage.getItem('autosave') === '1';
+
     autosave.addEventListener('input', () => {
-        if (autosave.checked) {
-            localStorage.setItem('autosave', '1')
-        }
-        else {
-            localStorage.setItem('autosave', '0')
-        }
-    })
-
-
+      localStorage.setItem('autosave', autosave.checked ? '1' : '0');
+      showInfo(autosave.checked ? 'Salvamento automático ativado.' : 'Salvamento automático desativado.');
+    });
 
     botao_Reiniciar.addEventListener('click', () => {
-        localStorage.removeItem('html');
-        localStorage.removeItem('css');
-        localStorage.removeItem('js');
-        localStorage.removeItem('autosave');
-        window.location.reload();
-    })
-
+      localStorage.removeItem('html');
+      localStorage.removeItem('css');
+      localStorage.removeItem('js');
+      localStorage.removeItem('autosave');
+      window.location.reload();
+    });
 
     botao_Salvar.addEventListener('click', () => {
-        salvarCode()
-        info.textContent = 'Código salvo com sucesso!'
-        setTimeout(() => {
-            info.textContent = ' '
-        }, 3000);
-    })
+      salvarCode();
+      showInfo('Código salvo com sucesso!');
+    });
 
-    botao_html.addEventListener('click', () => {
-        ativarHTML()
-    })
-    botao_css.addEventListener('click', () => {
-        ativarCSS()
-    })
-    botao_js.addEventListener('click', () => {
-        ativarJS()
-    })
-    //-----------------------
-    textareaHTML.addEventListener('input', () => {
-        document.getElementById('live').srcdoc = final();
-        if (autosave.checked) {
-            salvarCode()
-        }
-    })
-    textareaCSS.addEventListener('input', () => {
-        document.getElementById('live').srcdoc = final();
-        if (autosave.checked) {
-            salvarCode()
-        }
-    })
-    textareaJS.addEventListener('input', () => {
-        document.getElementById('live').srcdoc = final();
-        if (autosave.checked) {
-            salvarCode()
-        }
-    })
+    botao_html.addEventListener('click', ativarHTML);
+    botao_css.addEventListener('click', ativarCSS);
+    botao_js.addEventListener('click', ativarJS);
 
+    textareaHTML.addEventListener('input', onEditorInput);
+    textareaCSS.addEventListener('input', onEditorInput);
+    textareaJS.addEventListener('input', onEditorInput);
 
+    function onEditorInput() {
+      iframe.srcdoc = final();
+      if (autosave.checked) salvarCode();
+    }
 
+    function setActiveTab(activeButton, title, fileName, activeTextarea) {
+      tabs.forEach(tab => tab.classList.remove('active'));
+      activeButton.classList.add('active');
 
+      textareaHTML.classList.add('hidden');
+      textareaCSS.classList.add('hidden');
+      textareaJS.classList.add('hidden');
+      activeTextarea.classList.remove('hidden');
+
+      editorTitle.textContent = 'Arquivo atual: ' + title;
+      editorLabel.textContent = fileName;
+    }
 
     function ativarHTML() {
-        botao_html.style.backgroundColor = '#666'
-        botao_css.style.backgroundColor = '#444'
-        botao_js.style.backgroundColor = '#444'
-
-        botao_html.style.borderTop = '5px solid lime'
-        botao_css.style.borderTop = '5px solid transparent'
-        botao_js.style.borderTop = '5px solid transparent'
-
-        textareaCSS.style.display = 'none'
-        textareaJS.style.display = 'none'
-        textareaHTML.style.display = 'block'
+      setActiveTab(botao_html, 'HTML', 'index.html', textareaHTML);
     }
+
     function ativarCSS() {
-        botao_html.style.backgroundColor = '#444'
-        botao_css.style.backgroundColor = '#666'
-        botao_js.style.backgroundColor = '#444'
-
-        botao_html.style.borderTop = '5px solid transparent'
-        botao_css.style.borderTop = '5px solid lime'
-        botao_js.style.borderTop = '5px solid transparent'
-
-        textareaCSS.style.display = 'block'
-        textareaJS.style.display = 'none'
-        textareaHTML.style.display = 'none'
+      setActiveTab(botao_css, 'CSS', 'style.css', textareaCSS);
     }
+
     function ativarJS() {
-        botao_html.style.backgroundColor = '#444'
-        botao_css.style.backgroundColor = '#444'
-        botao_js.style.backgroundColor = '#666'
-
-        botao_html.style.borderTop = '5px solid transparent'
-        botao_css.style.borderTop = '5px solid transparent'
-        botao_js.style.borderTop = '5px solid lime'
-
-        textareaCSS.style.display = 'none'
-        textareaJS.style.display = 'block'
-        textareaHTML.style.display = 'none'
+      setActiveTab(botao_js, 'JavaScript', 'script.js', textareaJS);
     }
-
-
 
     textareaHTML.value = `<!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo</title>
 </head>
 <body>
-    <center>
-        <button id="hi">Hello</button>
-    </center>
+  <main>
+    <button id="hi">Hello</button>
+  </main>
 </body>
 </html>`;
 
     textareaCSS.value = `* {
-    border: 0;
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
-html {
-    background-color: aliceblue;
+
+body {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #0f172a, #1d4ed8);
 }
+
 button {
-    width: 90%;
-    background-color: rgb(100 200 100);
-    color: aliceblue;
-    padding: 5px;
-    border-radius: 5px;
-    max-width: 90%;
-    margin-top:30px;
-}
-button:hover {
-    background-color: green;
-    color: aliceblue;
-}
-`;
+  border: 0;
+  border-radius: 999px;
+  padding: 14px 24px;
+  font-size: 1rem;
+  color: white;
+  background: #22c55e;
+  cursor: pointer;
+}`;
 
     textareaJS.value = `document.getElementById('hi').addEventListener('click', () => {
-        alert('Hello buddy, Welcome to LiveServer');
-    });
-`;
-
+  alert('Hello buddy, Welcome to LiveServer');
+});`;
 
     function final() {
-
-        var finall = '<style>' +
-            textareaCSS.value + '</style>' +
-            textareaHTML.value;
-        var d = finall.replace('</body>', '</body><script>' + textareaJS.value + '< /script>');
-        var e = d.replace(' /script>', '/script>');
-
-        return e;
+      const html = textareaHTML.value;
+      const css = '<style>' + textareaCSS.value + '</style>';
+      const js = '<script>' + textareaJS.value + '<' + '/script>';
+      const base = html.includes('</head>') ? html.replace('</head>', css + '</head>') : css + html;
+      return base.includes('</body>') ? base.replace('</body>', js + '</body>') : base + js;
     }
 
-    setTimeout(() => {
-        ativarHTML()
-        document.getElementById('live').srcdoc = final();
-    }, 1);
-
-
-
     if (localStorage.getItem('html')) {
-        textareaHTML.value = localStorage.getItem('html').toString();
-        textareaCSS.value = localStorage.getItem('css').toString();
-        textareaJS.value = localStorage.getItem('js').toString();
-        document.getElementById('live').srcdoc = final();
-
+      textareaHTML.value = localStorage.getItem('html').toString();
+      textareaCSS.value = localStorage.getItem('css').toString();
+      textareaJS.value = localStorage.getItem('js').toString();
     }
 
     function salvarCode() {
-        localStorage.setItem('html', textareaHTML.value);
-        localStorage.setItem('css', textareaCSS.value);
-        localStorage.setItem('js', textareaJS.value);
-        document.getElementById('live').srcdoc = final();
+      localStorage.setItem('html', textareaHTML.value);
+      localStorage.setItem('css', textareaCSS.value);
+      localStorage.setItem('js', textareaJS.value);
+      iframe.srcdoc = final();
     }
 
+    function showInfo(message) {
+      info.textContent = message;
+      clearTimeout(showInfo.timeout);
+      showInfo.timeout = setTimeout(() => {
+        info.textContent = '';
+      }, 2500);
+    }
 
-
-
-</script>
-
+    ativarHTML();
+    iframe.srcdoc = final();
+  </script>
+</body>
 </html>
